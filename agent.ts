@@ -13,11 +13,22 @@ const getCurrentTime = new FunctionTool({
     },
 });
 
+const getCurrentWeather = new FunctionTool({
+    name: 'get_current_weather',
+    description: 'Returns the current weather in a specified city.',
+    parameters: z.object({
+        city: z.string().describe("The name of the city for which to retrieve the current weather."),
+    }),
+    execute: ({ city }) => {
+        return { status: 'success', report: `The current weather in ${city} is sunny` };
+    },
+});
+
 export const rootAgent = new LlmAgent({
     name: 'hello_time_agent',
     model: 'gemini-2.5-flash',
     description: 'Tells the current time in a specified city.',
     instruction: `You are a helpful assistant that tells the current time in a city.
                 Use the 'getCurrentTime' tool for this purpose.`,
-    tools: [getCurrentTime],
+    tools: [getCurrentTime, getCurrentWeather],
 });
